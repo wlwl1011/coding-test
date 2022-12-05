@@ -26,3 +26,5 @@ else:
         idx = dq.popleft()
         dq.append(idx)
     print(dq.pop())
+
+    
