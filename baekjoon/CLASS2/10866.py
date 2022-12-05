@@ -14,10 +14,11 @@ for i in range(n):
     temp = []
     temp = input()
 
-    if len(temp) == 2:
 
-        command = temp[0]
-        data = temp[1]
+    if " " in temp:
+
+        command, data = temp.split()
+
         if command=="push_front":
             dq.appendleft(int(data))
         elif command=="push_back":
@@ -25,7 +26,7 @@ for i in range(n):
 
     else:
 
-        command = temp[0]
+        command = temp
 
         if command=="size":
             print(len(dq))
@@ -38,10 +39,10 @@ for i in range(n):
             if len(dq) == 0:
                 print(-1)   
             else:
-                print(dq.remove())
+                print(dq.pop())
         elif command=="empty":
             if len(dq) == 0:
-                print(-1)   
+                print(1)   
             else:  
                 print(0)
         elif command=="front":
