@@ -7,7 +7,7 @@ atexit.register(lambda: os.write(1, stdout.getvalue()))
 
 n, k = map(int, input().split())
 
-check = k(k+1)//2
+check = k*(k+1)//2
 
 if check > n:
     print(-1)
