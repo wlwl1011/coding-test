@@ -33,6 +33,8 @@ def solution(name):
         #print("behind",behind)
         temp_font = front.copy()
         temp_behind = behind.copy()
+
+        
         if len(temp_font) > 0 and temp_font[len(temp_font)-1] == 'A':
             temp_font.pop()
             while 1:
@@ -48,24 +50,31 @@ def solution(name):
                 else: break    
         #print("temp_font",temp_font)
         #print("temp_behind",temp_behind)
+        
+        if len(temp_font) == 0 and len(temp_behind) == 0:
+            return 0
+
         if len(front) >= len(behind):
-            if 2*(len(temp_behind) - 1) >=0 :
-                temp += 2*(len(temp_behind) - 1)
+            
             temp += len(temp_font) - 1   
 
-            if len(temp_behind) == 0 or len(temp_font) == 1:
-                temp +=1 
+            if len(temp_behind) == 0:
+                temp +=0    
             else: 
+                if 2*(len(temp_behind) - 1) > 0 :
+                    temp += 2*(len(temp_behind) - 1)
                 temp +=2     
         else:
             temp += len(temp_behind) - 1
-            if 2*(len(temp_font) - 1) >=0 :   
-                temp += 2*(len(temp_font) - 1)
-
-            if len(temp_font) == 0 or len(temp_behind) == 1:
-                temp +=1 
+            
+            if len(temp_font) == 0:
+                temp +=1    
+            elif len(temp_font) == 1:
+                temp +=1      
             else: 
-                temp +=2      
+                if 2*(len(temp_font) - 1) >0 :   
+                    temp += 2*(len(temp_font) - 1)
+                temp +=1      
         #print("이동횟수", temp)            
         answer_list.append(answer + temp)
         #print(answer + temp)
@@ -76,10 +85,11 @@ def solution(name):
     #print("behind",behind)
     temp = 0
     temp += len(front) - 1  
+    #print("이동횟수", temp)  
     #print(answer + temp)
     answer_list.append(answer + temp)
     answer = min(answer_list)
     return answer
 
 
-print(solution("JAN"))
+print(solution("AAAAAAAAA"))
