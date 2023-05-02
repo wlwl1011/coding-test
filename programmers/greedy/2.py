@@ -23,51 +23,60 @@ def solution(name):
     #이를 하기 위해 완전 탐색해야함
     front = []
     behind = []
-    front_check = []
-    behind_check = []
-
     for i in range(len(name)-1, 0, -1):
         behind.append(name[i])
-        behind_check.append('A')
     behind.append(name[0])
-    behind_check.append('A')
-    
+
     for i in name:
         temp = 0
-        print("front", front)
-        print("behind",behind)
-        
+        #print("front", front)
+        #print("behind",behind)
+        temp_font = front.copy()
+        temp_behind = behind.copy()
+        if len(temp_font) > 0 and temp_font[len(temp_font)-1] == 'A':
+            temp_font.pop()
+            while 1:
+                if len(temp_font) > 0 and temp_font[len(temp_font)-1] == 'A':
+                    temp_font.pop()
+                else:
+                    break  
+        if len(temp_behind) > 0 and temp_behind[len(temp_behind)-1] == 'A':
+            temp_behind.pop()
+            while 1:
+                if len(temp_behind) > 0 and temp_behind[len(temp_behind)-1] == 'A':
+                    temp_behind.pop()
+                else: break    
+        #print("temp_font",temp_font)
+        #print("temp_behind",temp_behind)
         if len(front) >= len(behind):
+            if 2*(len(temp_behind) - 1) >=0 :
+                temp += 2*(len(temp_behind) - 1)
+            temp += len(temp_font) - 1   
 
-            if 2*(len(behind) - 1) >=0 :
-                temp += 2*(len(behind) - 1)
-            temp += len(front) - 1       
-            if len(behind) != 0:
-                #앞뒤 왔다갔다 ..
-                temp +=2         
-        else:
-            temp += len(behind) - 1
-            if 2*(len(front) - 1) >=0 :
-                temp += 2*(len(front) - 1)
-            
-            if len(front) != 0:
-                #앞뒤 왔다갔다 ..
-                temp +=2
+            if len(temp_behind) == 0 or len(temp_font) == 1:
+                temp +=1 
             else: 
-                temp +=1          
+                temp +=2     
+        else:
+            temp += len(temp_behind) - 1
+            if 2*(len(temp_font) - 1) >=0 :   
+                temp += 2*(len(temp_font) - 1)
+
+            if len(temp_font) == 0 or len(temp_behind) == 1:
+                temp +=1 
+            else: 
+                temp +=2      
+        #print("이동횟수", temp)            
         answer_list.append(answer + temp)
-        print(answer + temp)
+        #print(answer + temp)
         if len(behind) > 0:
             behind.pop()
-            behind_check.pop()
         front.append(i)
-        front.append('A')
-        
-    print("front", front)
-    print("behind",behind)
+    #print("front", front)
+    #print("behind",behind)
     temp = 0
     temp += len(front) - 1  
-    print(answer + temp)
+    #print(answer + temp)
     answer_list.append(answer + temp)
     answer = min(answer_list)
     return answer
