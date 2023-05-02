@@ -1,13 +1,13 @@
+
 def solution(name):
     
     alpabet_1 = "ABCDEFGHIJKLM"
     alpabet_2 = "NOPQRSTUVWXYZ"
     dic = {}
-    answer_1 = 0
-    answer_2 = 0
     answer = 0
+    answer_list = []
     index = 0
-
+    #각 알파벳에 요구되는 조이스틱의 최소 수
     for i in alpabet_1:
         dic[i] = index
         index += 1
@@ -15,39 +15,62 @@ def solution(name):
     for i in alpabet_2:
         dic[i] = index    
         index -=1
+    #할당    
     for i in name:
+        answer += dic[i]
+    #print(answer)
+    #각 알파벳의 위치에 요구되는 조이스틱의 최소 수
+    #이를 하기 위해 완전 탐색해야함
+    front = []
+    behind = []
+    front_check = []
+    behind_check = []
+
+    for i in range(len(name)-1, 0, -1):
+        behind.append(name[i])
+        behind_check.append('A')
+    behind.append(name[0])
+    behind_check.append('A')
+    
+    for i in name:
+        temp = 0
+        print("front", front)
+        print("behind",behind)
         
-        answer_2 += dic[i]
-        answer_1 += dic[i]
-        if  name.index(i) != len(name) - 1 :
-            answer_2 +=1
-    behind = ''    
-    name = list(list(name))
-    for i in range(len(name)-1,len(name)//2 ,-1 ):
-        behind += str(name[i])
-        name.pop()
-    front = ''    
-    for i in name:
-        front += str(i)
-    print(front)    
-    print(behind)   
-    name = str(name)
-    for alpa in front:
-        if  front.index(alpa) != len(front) - 1 :
-            print("호이짜")
-            answer_1 +=1
+        if len(front) >= len(behind):
+
+            if 2*(len(behind) - 1) >=0 :
+                temp += 2*(len(behind) - 1)
+            temp += len(front) - 1       
+            if len(behind) != 0:
+                #앞뒤 왔다갔다 ..
+                temp +=2         
+        else:
+            temp += len(behind) - 1
+            if 2*(len(front) - 1) >=0 :
+                temp += 2*(len(front) - 1)
             
-    answer_1 +=1
-    for alpa in behind:
+            if len(front) != 0:
+                #앞뒤 왔다갔다 ..
+                temp +=2
+            else: 
+                temp +=1          
+        answer_list.append(answer + temp)
+        print(answer + temp)
+        if len(behind) > 0:
+            behind.pop()
+            behind_check.pop()
+        front.append(i)
+        front.append('A')
         
-        if  behind.index(alpa) != len(behind) - 1 :
-            print("호이짜")
-            print("휴쪄쪄")
-            answer_1 +=2
-    print(answer_1)  
-    print(answer_2)           
-    answer = min(answer_1,answer_2)
+    print("front", front)
+    print("behind",behind)
+    temp = 0
+    temp += len(front) - 1  
+    print(answer + temp)
+    answer_list.append(answer + temp)
+    answer = min(answer_list)
     return answer
 
 
-print(solution("LABLPAJM"))
+print(solution("JAN"))
