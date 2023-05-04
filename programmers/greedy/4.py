@@ -2,43 +2,18 @@ from collections import deque
 
 def solution(people, limit):
     answer = 0
-    people.sort()
-    dq = deque(people)
-    front = 0
-    behind =0
-    while dq:
-        #print("전",dq)
-        answer +=1
-        sum = 0
-        if len(dq) != 0 and behind ==0:    
-            behind = dq.pop()
-        if len(dq) != 0 and front ==0:
-            front = dq.popleft()
-        #print('behind',behind)
-        #print('front',front)
-        if behind < limit:
-            sum += behind
-            behind = 0
-            #print("sum += behind",sum)
-            if sum + front <= limit:
-                sum += front
-                front = 0
-                #print("sum += front",sum)
-                if sum < limit:
-                    while dq:
-                        #print(dq)
-                        if len(dq) != 0 and front == 0:
-                            front = dq.popleft()
-                        if sum > limit :
-                            dq.appendleft(front)
-                            break 
-                        else:     
-                            sum += front
-                            front = 0         
-            else:
-                dq.appendleft(front)
-                front = 0                        
-        #print("후",dq)
-    return answer 
-
-print(solution(	[70, 50, 80, 50],100))
+    people = deque(sorted(people, reverse = True))
+    
+    while len(people) > 1:
+        if people[0] + people[-1] <= limit: # 최댓값과 최솟값 묶어서 보트태움
+            answer += 1
+            people.pop()    #최소 빼내고
+            people.popleft()    #최대 빼내고
+        else:
+            answer += 1
+            people.popleft()
+            
+    if people:  #people에 1명 남아있는 경우 처리
+        answer += 1
+                
+    return answer
