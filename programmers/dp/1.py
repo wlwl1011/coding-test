@@ -20,19 +20,19 @@ def solution(N, number):
     # }
 
     for i in range(1, 8):
-        print("i=",i)
+        #print("i=",i)
         for j in range(i):
-            print("j=",j)
+            #print("j=",j)
             for op1 in s[j]:
-                print("This is op1 : ","s[",j,"]","=",op1)
+                #print("This is op1 : ","s[",j,"]","=",op1)
                 for op2 in s[i-j-1]:
-                    print("This is op2 : ","s[",i-j-1,"]","=",op2)
+                    #print("This is op2 : ","s[",i-j-1,"]","=",op2)
                     s[i].add(op1 + op2)
                     s[i].add(op1 - op2)
                     s[i].add(op1 * op2)
                     if op2 != 0:
                         s[i].add(op1 // op2)
-        print("s[" ,i,"]=",s[i])                
+        #print("s[" ,i,"]=",s[i])                
 
         if number in s[i]:
             answer = i + 1
