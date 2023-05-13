@@ -8,16 +8,44 @@ atexit.register(lambda: os.write(1, stdout.getvalue()))
 n, m, k = map(int,input().split())
 answer = 0
 
-n_num = n //2
-m_num = m 
+n = n//2
 
-if n_num >= m_num:
-    n -= k
-    n_num = n //2
-    answer = min(n_num,m_num)
+if n >= m:
+    while(n>=m):
+        if k == 0:
+            break
+        if k-2 >=0:
+            n -=1
+            k -=2
+        else:
+            n = n*2
+            n -= 1
+            k -=1
+            n = n // 2    
+    if k > 0:
+        while(k>=0):
+            if k-2>=0 and n >= m: 
+                n -=1
+                k -=2
+            elif k-1>=0 :
+                m -=0
+                k -=1    
 else:
-    m -= k
-    m_num = m
-    answer = min(n_num,m_num)    
+    while(m>=n):
+        if k == 0:
+            break
+        m -=1
+        k -=1
+    if k > 0:
+        while(k>=0):
+            if k-2>=0 and n >= m: 
+                n -=1
+                k -=2
+            elif k-1>=0 :
+                m -=0
+                k -=1     
+
+answer = min(n,m)
+
 
 print(answer)
