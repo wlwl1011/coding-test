@@ -7,19 +7,17 @@ atexit.register(lambda: os.write(1, stdout.getvalue()))
 
 n, m, k = map(int,input().split())
 answer = 0
-while True:
-    if k == 0:
-        break
-    if n > m and k:
-        n -=1
-        k -=1
-    elif m> n and k:
-        m -=1
-        k -=1
-        
-    if n-2>=0 and m-1 >=0:
-        n-=2
-        m -=1
-        answer +=1
+
+n_num = n //2
+m_num = m 
+
+if n_num >= m_num:
+    n -= k
+    n_num = n //2
+    answer = min(n_num,m_num)
+else:
+    m -= k
+    m_num = m
+    answer = min(n_num,m_num)    
 
 print(answer)
