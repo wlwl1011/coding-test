@@ -16,13 +16,20 @@ arr.sort(reverse=True)
 start = 0
 end = 0
 answer = 0
+
 while arr:
     s, e = arr.pop()
     if start == 0 and end == 0:
         start = s
         end = e
+        if len(arr) == 0:
+                answer += math.ceil((end-start)/3)
     else:
-        if s <= end or s== end+1 :
+        if start < s and e < end:
+            if len(arr) == 0:
+                answer += math.ceil((end-start)/3)
+            continue
+        elif s <= end or s== end+1 :
             end = e
             if len(arr) == 0:
                 answer += math.ceil((end-start)/3)
@@ -30,10 +37,9 @@ while arr:
             answer += math.ceil((end-start)/3)
             start = s
             end = e
-       # print(answer,(end-start)/3)    
+   
 
       
-
 print(answer)
 
 
