@@ -22,24 +22,20 @@ while arr:
     if start == 0 and end == 0:
         start = s
         end = e
-        if len(arr) == 0:
-                answer += math.ceil((end-start)/3)
     else:
-        if start < s and e < end:
-            if len(arr) == 0:
-                answer += math.ceil((end-start)/3)
+        if start <= s and e <= end:
             continue
         elif s <= end or s== end+1 :
             end = e
-            if len(arr) == 0:
-                answer += math.ceil((end-start)/3)
+            
         else:
-            answer += math.ceil((end-start)/3)
+            answer += math.ceil((end-start)/l)
             start = s
             end = e
+    if len(arr) == 0:
+        answer += math.ceil((end-start)/l)        
+            
    
-
-      
 print(answer)
 
 
