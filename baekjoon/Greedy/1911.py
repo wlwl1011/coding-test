@@ -11,7 +11,7 @@ for _ in range(n):
     temp = list(map(int,input().split()))
     arr.append(temp)
 
-arr.sort(reverse=True)   
+arr.sort(key = lambda x:x[1], reverse=True)
 
 start = 0
 end = 0
@@ -26,7 +26,7 @@ while arr:
     else:
         if end < s:
             if (end-start) % l == 0:
-                answer += end-start
+                answer += math.ceil((end-start)/l)
                 start = s
             else:    
                 answer += math.ceil((end-start)/l)
@@ -43,7 +43,7 @@ while arr:
     if len(arr) == 0:
         answer += math.ceil((end-start)/l)        
             
-   
+
 print(answer)
 
 
