@@ -16,22 +16,30 @@ arr.sort(reverse=True)
 start = 0
 end = 0
 answer = 0
-
+remain = 0
 while arr:
+
     s, e = arr.pop()
     if start == 0 and end == 0:
         start = s
         end = e
     else:
-        if start <= s and e <= end:
-            continue
-        elif s <= end or s== end+1 :
-            end = e
+        if end < s:
+            if (end-start) % l == 0:
+                answer += end-start
+                start = s
+            else:    
+                answer += math.ceil((end-start)/l)
+                #print(start, end)
+                remain = l-((end-start)%l)
+                if remain + end < s:
+                    start = s
+                else:
+                    start = remain + end + 1
+            end = e 
             
-        else:
-            answer += math.ceil((end-start)/l)
-            start = s
-            end = e
+        if s <= end :
+            end = e     
     if len(arr) == 0:
         answer += math.ceil((end-start)/l)        
             
