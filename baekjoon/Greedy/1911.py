@@ -5,45 +5,33 @@ stdout = io.BytesIO()
 sys.stdout.write = lambda s: stdout.write(s.encode("ascii"))
 atexit.register(lambda: os.write(1, stdout.getvalue()))
 
-n , l = map(int,input().split())
-arr = []
-for _ in range(n):
-    temp = list(map(int,input().split()))
-    arr.append(temp)
+n, l = map(int, input().split())
 
-arr.sort(key = lambda x:x[1], reverse=True)
+sand = []
+for i in range(n):
+    start, end = map(int, input().split())
+    sand.append([start, end])
 
-start = 0
-end = 0
-answer = 0
-remain = 0
-while arr:
+## 제일 뒤부터로 정렬
+sand.sort(key = lambda x:x[1], reverse=True)
 
-    s, e = arr.pop()
-    if start == 0 and end == 0:
-        start = s
-        end = e
-    else:
-        if end < s:
-            if (end-start) % l == 0:
-                answer += math.ceil((end-start)/l)
-                start = s
-            else:    
-                answer += math.ceil((end-start)/l)
-                #print(start, end)
-                remain = l-((end-start)%l)
-                if remain + end < s:
-                    start = s
-                else:
-                    start = remain + end + 1
-            end = e 
-            
-        if s <= end :
-            end = e     
-    if len(arr) == 0:
-        answer += math.ceil((end-start)/l)        
-            
+#print(sand)
 
-print(answer)
+count = 0
+last_index = sand[0][1]
 
+for start, end in sand:
+    if last_index < start: # 이미 판자가 덮은 경우
+        continue
+    if last_index < end: # 판의 길이가 넘어왔을때
+        end = last_index
+    len = end - start
+    remain = len % l
+    if remain == 0: # 판자로 정확히 덮을 수 있는 경우
+        last_index = start
+        count += len // l
+    else: # 판자가 남는경우
+        last_index = start - l + remain
+        count += len // l + 1
 
+print(count)
