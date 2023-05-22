@@ -22,7 +22,6 @@ check_list = deque()
 check_list.append([0,0])
 
 while check_list:
-   
     x, y = check_list.popleft()
     if x == n-1 and y == m-1:
         break
