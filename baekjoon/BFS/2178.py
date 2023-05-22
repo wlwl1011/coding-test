@@ -7,34 +7,40 @@ atexit.register(lambda: os.write(1, stdout.getvalue()))
 
 n, m = map(int,input().split())
 arr = []
-for _ in range(n):
-    temp = list(map(int,input().split()))
+
+for i in range(n):
+    temp = list(map(int,input()))
     arr.append(temp)
+
+#print(arr)
 
 dx = [-1, 1, 0, 0]  
 dy = [0, 0, -1, 1]
 
-answer = 0
+
 check_list = deque()
 check_list.append([0,0])
+
 while check_list:
-    print(check_list)
-    x, y = check_list.pop()
+   
+    x, y = check_list.popleft()
     if x == n-1 and y == m-1:
         break
-    answer +=1
+
     for i in range(4):
         temp_x = x
         temp_y = y
         temp_x += dx[i]
         temp_y += dy[i]
         
-        if temp_x < 0 or temp_y < 0 or temp_x > n-1 or temp_y > m-1:
+        if temp_x < 0 or temp_y < 0 or temp_x >= n or temp_y >= m:
             continue
-        print(temp_x,temp_y)
+        if arr[temp_x][temp_y] == 0:
+            continue
         if arr[temp_x][temp_y] == 1:
+            arr[temp_x][temp_y] = arr[x][y] + 1
             check_list.append([temp_x,temp_y])
 
-print(answer)
+print(arr[n-1][m-1])
 
   
