@@ -13,14 +13,17 @@ for i in range(t):
     arr = list(map(int,input())) #1 아웃, 0 인
     arr_len = len(arr)
     flag = True
-    for i in range(arr_len):
-        if i == arr_len-1-i:
-            break
-        if arr[i] == arr[arr_len-1-i]:
-            flag = False
-            break
-    if flag == True:
+    if arr_len==1:
         print("YES")
     else:
-        print("NO")    
+        for i in range(0,arr_len,3):
+            if i+2>=arr_len:
+                break
+            if arr[i] == arr[i+2]:
+                flag = False
+                break
+        if flag == True:
+            print("YES")     
+        else:
+            print("NO")    
 
