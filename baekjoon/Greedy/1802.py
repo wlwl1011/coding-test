@@ -18,10 +18,6 @@ def check(arr):
     return check(arr[0:len(arr)//2]) and check(arr[len(arr)//2+1:len(rules)])
                 
 
-       
-
-
-
 t = int(input()) #테스트 케이스 갯수
 
 for i in range(t):
@@ -29,4 +25,4 @@ for i in range(t):
     if check(rules):
         print("YES")
     else:
-        print("NO")    
+        print("NO")

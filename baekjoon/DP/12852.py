@@ -30,7 +30,6 @@ for i in range(2,n+1):
     path[i] = str(i) + " " + path[prev]    
  
 
-   
 
 print(d[n])
 print(path[n])
