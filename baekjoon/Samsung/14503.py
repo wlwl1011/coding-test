@@ -25,7 +25,7 @@ x = r
 y = c
 
 count = 1
-arr[x][y] = 1
+arr[x][y] = -1
 while True:
     #범위를 초과하지 않아야함
     if x >= 0 and y >= 0 and x < n and y < m :
@@ -40,7 +40,7 @@ while True:
                     flag = False
                     x = cx
                     y = cy
-                    arr[cx][cy] = 1
+                    arr[cx][cy] = -1
                     count +=1
                     #현재 칸의 주변 4칸 중 청소되지 않은 빈 칸이 있는 경우,
                     #반시계 방향으로 90 회전한다.
