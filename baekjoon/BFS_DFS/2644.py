@@ -19,10 +19,13 @@ def dfs(arr, v1, v2, visited):
         if not visited[i]:
             #print(v1, check_list, "i : ", i)
             if i == v2:
+                #print("Find!")
                 flag = depth
                 return
             dfs(arr, i, v2, visited)
+            depth -= 1
             visited[i] = True
+
             
 
 n = int(input())
