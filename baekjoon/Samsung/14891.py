@@ -12,12 +12,11 @@ for i in range(4):
 
 k = int(input())
 
-
-
 for i in range(k):
     num, rotate = map(int, input().split())
     temp_arr = copy.deepcopy(arr[num-1])
-    print(len(arr), len(temp_arr))
+    check_arr = copy.deepcopy(arr)
+
     #반시계 방향
     if rotate == -1:
         for i in range(8):
@@ -34,7 +33,7 @@ for i in range(k):
                 arr[num-1][i] = temp_arr[i-1]
 
     #지금 돌린 애 옆에 있어서 저절로 돌아가는 애들 ..
-    check_arr = copy.deepcopy(arr)
+    
     if num-1 == 0 :
         
         if check_arr[0][2] != check_arr[1][6]:
@@ -145,7 +144,7 @@ for i in range(k):
                             arr[2][i] = temp_arr[i-1]
 
                 #3번이 돌아갔으니까 4번이 돌아가야지
-                if check_arr[2][6] != check_arr[3][2]: 
+                if check_arr[2][2] != check_arr[3][6]: 
 
                     #근데 그걸 반대로
                     temp_rotate_2 = -(temp_rotate_2)
@@ -210,7 +209,7 @@ for i in range(k):
                         else:    
                             arr[0][i] = temp_arr[i-1]      
          #3번이 돌아갔으니까 4번이 돌아가야지
-        if check_arr[2][6] != check_arr[3][2]: 
+        if check_arr[2][2] != check_arr[3][6]: 
 
             #근데 그걸 반대로
             temp_rotate_2 = -(temp_rotate_2)
@@ -231,7 +230,7 @@ for i in range(k):
                         arr[3][i] = temp_arr[i-1]     
     else :
         #4번이랑 3번 비교
-        if check_arr[2][6] != check_arr[3][2]: 
+        if check_arr[2][2] != check_arr[3][6]: 
 
             #근데 그걸 반대로
             rotate = -(rotate)
@@ -277,7 +276,7 @@ for i in range(k):
 
                     #근데 그걸 반대로
                     rotate = -(rotate)
-                    emp_arr = copy.deepcopy(arr[0]) #2번 배열 복사
+                    temp_arr = copy.deepcopy(arr[0]) #2번 배열 복사
                     #반시계 방향
                     if rotate == -1:
                         for i in range(8):
