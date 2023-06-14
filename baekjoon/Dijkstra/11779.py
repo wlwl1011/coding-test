@@ -13,20 +13,22 @@ m = int(input())
 
 graph = [ [] for _ in range(n+1)]
 
-distance = [INF] * (n+1)
 
 for i in range(m):
     start, end, value = map(int, input().split())
     graph[start].append((end, value))
 
-start, end = map(int, input().split())
+distance = [INF] * (n+1)
+nearnest = [start] * (n + 1)
 
-def dijkstra(start):
+start, end = map(int, input().split())
+answer = []
+def dijkstra(start,end):
     q = [] 
     #시작 노드로 가기 위한 최단 경로는 0으로 설정하여 queue에 삽입
     heapq.heappush(q, (0, start))
     distance[start] = 0
-  
+    answer.append(start)
     while q: #큐가 비어있지 않다면
         #가장 최단 거리가 짧은 노드에 대한 정보 끝내기
         dist, now = heapq.heappop(q)
@@ -38,13 +40,21 @@ def dijkstra(start):
             cost = dist+ i[1]
             #현재 노드를 거쳐서 다른 노드를 이동하는게 더 짧은 경우
             if cost < distance[i[0]]:
-
+                nearnest[i[0]] = now
                 distance[i[0]] = cost
                 heapq.heappush(q, (cost, i[0]))
 
 dijkstra(start, end)           
 
 print(distance[end])
+ans = []
+tmp = end
+while tmp != start:
+    ans.append(str(tmp))
+    tmp = nearnest[tmp]
 
-for i in answer:
-    print(i, end = " ")
+ans.append(str(start))
+ans.reverse()    
+
+print(len(ans))
+print(" ".join(ans))
