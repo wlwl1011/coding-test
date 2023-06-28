@@ -23,8 +23,16 @@ while mon:
         break
 
     for i in range(len(mon)):
-       if target >= mon[0][0]:
-           if end <= mon[0][1]:
-               end = mon[0][1]
+        if target >= mon[0][0]:
+            if end <= mon[0][1]:
+                end = mon[0][1]
+            mon.remove(mon[0])   
+        else:
+            break    
+    target = end
+    count +=1
 
-print(count)    
+if target < 1201:
+    print(0)
+else:                
+    print(count)    
