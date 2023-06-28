@@ -54,7 +54,6 @@ while t>0:
         if tr == r-1 and tc == c-1:
             break
 
-          
     temp_arr = copy.deepcopy(arr)            
     # cleaner[0] 반시계 방향으로 이동 
     for i in range(0,cleaner[0][0]+1): 
@@ -64,6 +63,7 @@ while t>0:
             if i == 0: # 위쪽 외곽
                 if j == 0: # 0 번째 열 처리
                     arr[i+1][j] = temp_arr[i][j]        
+                    arr[i][j] = temp_arr[i][j+1]
                 elif j == c-1: # 맨 끝 열 처리
                     arr[i][j] = temp_arr[i+1][j]
                 else:
@@ -115,9 +115,11 @@ while t>0:
                         arr[i][j] = temp_arr[i+1][j]
                 elif j == c-1: # 맨 끝 열 처리
                     arr[i][j] = temp_arr[i-1][j]
-    
+      
+          
     temp_arr = copy.deepcopy(arr)    
     t -= 1
+
 
 sum = 0
 for i in range(r):
