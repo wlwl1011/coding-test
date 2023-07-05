@@ -36,9 +36,9 @@ answer += fish[0][0]
 fish[0][0] = -1
 direction[0][0] = -1
 
-while True: 
-    #물고기의 이동      
-    for number in range(1,16+1):
+
+def fish_move(fish, direction):
+     for number in range(1,16+1):
         for x in range(4):
             for y in range(4):
                 #물고기는 번호가 작은 물고기부터 순서대로 이동
@@ -88,18 +88,14 @@ while True:
                         direction[nx][ny] = direction[x][y]
                         direction[x][y] = direction_temp
                     break   
+        shark_eat()        
 
-    #물고기의 이동이 모두 끝나면 상어가 이동한다.                 
-    #상어는 방향에 있는 칸으로 이동 할 수 있고, 한번에 여러개의 칸을 이동할 수 있다.
-    #상어는 물고기가 없는 칸으로 이동할 수 없다. 없으면 집으로 돌아간다.
-
-    #상어 .... 백트레킹 해야함 . 왜냐면 최댓값을 구해야하니까 .................................
-
+def shark_eat():
     sx = shark_index[0] + dx[shark_direction-1]
     sy = shark_index[1] + dy[shark_direction-1]
     #근데 새로 갈 방향이 경계를 벗어나면?
     if sx < 0 or sx >=4 or sy < 0 or sy >= 4:
-        break
+        return
 
     #경계 안 벗어남
     flag = True
@@ -124,7 +120,7 @@ while True:
             fish[sx][sy] = -1
             direction[sx][sy] = -1    
         else:
-            break        
+            return        
     #그냥 바로 물고기가 있을 수도 있자나
     else:
         shark_index = [sx, sy]
@@ -132,22 +128,13 @@ while True:
         answer += fish[sx][sy]
         fish[sx][sy] = -1
         direction[sx][sy] = -1      
+
+
+while True: 
+    #물고기의 이동      
+    fish_move()
+   
                
 print(answer)
 
-#상어의 방향은 물고기의 방향과 같아짐. 이후 물고기가 이동함
-    
-#물고기는 번호가 작은 물고기부터 순서대로 이동
-#한칸 이동, 이동 할 수 있는 칸은 빈칸과 다른 물고리가 있는 칸
-#이동할 수 없는 칸은 상어가 있거나 공간의 경계를 넘는 경우
-# 각 물고기는 방향이 이동할 수 있는 칸을 향할 때까지 45도 반시계 회전
-# 만약 없으면 안 함
-
-
-#물고기의 이동이 끝나면 상어가 이동함
-#상어는 방향에 있는 칸으로 이동할 수 있음
-#물고기가 있는 칸으로 이동할 경우 그 칸의 물고리를 먹음
-#그 물고기의 방향을 가짐
-#꼭 물고기가 있는 칸으로 이동함
-#상어가 이동할 수 있는 칸이 없으면 공간에서 벗어나 집으로감
 
