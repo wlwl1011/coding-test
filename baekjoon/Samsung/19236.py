@@ -1,7 +1,4 @@
 import sys, os, io, atexit
-import copy
-from collections import deque
-import heapq
 input = lambda: sys.stdin.readline().rstrip('\r\n')
 stdout = io.BytesIO()
 sys.stdout.write = lambda s: stdout.write(s.encode("ascii"))
@@ -27,45 +24,116 @@ for i in range(4):
 ####
 ####
 
-queue = deque()
 #청소년 상어는 (0, 0)에 있는 물고기를 먹고, (0, 0)에 들어가게 된다. 
 # 상어의 방향은 (0, 0)에 있던 물고기의 방향과 같다. 이후 물고기가 이동한다.
 
 #i, j, direction
+answer = 0
 shark_index = [0,0]
 shark_direction = direction[0][0]
-fish[0][0] = 1e9
-direction[0][0] = 1e9
+#빈칸은 -1로 표현한다.
+answer += fish[0][0]
+fish[0][0] = -1
+direction[0][0] = -1
 
 while True: 
-    copy_fish = copy.deepcopy(fish)
-    copy_direction = copy.deepcopy(direction)
-    for number in range(16):
+    #물고기의 이동      
+    for number in range(1,16+1):
         for x in range(4):
             for y in range(4):
                 #물고기는 번호가 작은 물고기부터 순서대로 이동
-                fish_data = copy_fish[x][y]
-                direction_data = copy_direction[x][y]
-                if copy_fish[x][y] == number:
+                fish_data = fish[x][y]
+                direction_data = direction[x][y]
+                #1번부터 차례대로 상어를 먹는다 냠냠
+                if fish_data == number:
                     #direction_data 은 1부터 8까지의 값이다.
                     nx = x + dx[direction_data-1]
                     ny = y + dy[direction_data-1]
+                    
+                    #상어가 있거나, 공간의 경계를 넘어가 이동할 수 없다면,
                     # 각 물고기는 방향이 이동할 수 있는 칸을 향할 때까지 45도 반시계 회전
+                    
                     if [nx,ny] == shark_index or nx < 0 or nx >= 4 or ny < 0 or ny >= 4:
+                        new_direction = direction_data-1
                         for i in range(1,8):
-                            new_direction = direction_data-1-i
-                            if new_direction < 0:
-                                new_direction = 8
-                            nx = x + dx[new_direction]
-                            ny = y + dy[new_direction]
-                            if [nx,ny] != shark_index and 0 <= nx < 4 and 0 <= ny < 4:
+                            new_direction += 1
+                            if new_direction > 7:
+                                new_direction = 0
+                            cx = x + dx[new_direction]
+                            cy = y + dy[new_direction]
+                            #상어도 없고
+                            #공간의 경계안에 있다면 ! 그 방향이닷 !!!!
+                            if [cx,cy] != shark_index and 0 <= cx < 4 and 0 <= cy < 4:
+                                nx = cx
+                                ny = cy
+                                #그럼 방향도 업데이터 해줘야지.
+                                direction[x][y] = new_direction + 1
+                                #
+                                fish_temp = fish[nx][ny]
+                                fish[nx][ny] = fish[x][y]
+                                fish[x][y] = fish_temp
+                                #
+                                direction_temp = direction[nx][ny]
+                                direction[nx][ny] = direction[x][y]
+                                direction[x][y] = direction_temp
                                 break
-                    fish[nx][ny] = copy_fish[x][y]
-                    fish[x][y] = copy_fish[nx][ny]
-                    direction[nx][ny] = copy_direction[x][y]
-                    direction[x][y] = copy_direction[nx][ny]
+                    #애초에 갈 수 있었으면 그냥 하면 된다.
+                    else:                 
+                        #
+                        fish_temp = fish[nx][ny]
+                        fish[nx][ny] = fish[x][y]
+                        fish[x][y] = fish_temp
+                        #
+                        direction_temp = direction[nx][ny]
+                        direction[nx][ny] = direction[x][y]
+                        direction[x][y] = direction_temp
+                    break   
 
-                      
+    #물고기의 이동이 모두 끝나면 상어가 이동한다.                 
+    #상어는 방향에 있는 칸으로 이동 할 수 있고, 한번에 여러개의 칸을 이동할 수 있다.
+    #상어는 물고기가 없는 칸으로 이동할 수 없다. 없으면 집으로 돌아간다.
+
+    #상어 .... 백트레킹 해야함 . 왜냐면 최댓값을 구해야하니까 .................................
+
+    sx = shark_index[0] + dx[shark_direction-1]
+    sy = shark_index[1] + dy[shark_direction-1]
+    #근데 새로 갈 방향이 경계를 벗어나면?
+    if sx < 0 or sx >=4 or sy < 0 or sy >= 4:
+        break
+
+    #경계 안 벗어남
+    flag = True
+    if fish[sx][sy] == -1: #물고기가 없다
+        #싹다 디빈다.
+        while True: #범위 안에서 물고기가 있는 칸으로 ..
+            sx += dx[shark_direction-1]
+            sy += dy[shark_direction-1]
+            #범위를 벗어나면 안됨!
+            if sx < 0 or sx >=4 or sy < 0 or sy >= 4:
+                flag = False
+                break
+            #범위를 벗어나지 않고 물고기가 있는 칸을 찾았니?
+            if fish[sx][sy] != -1:
+                #그러면 나가자
+                break
+
+        if flag: #그 범위를 찾은겨
+            shark_index = [sx, sy]
+            shark_direction = direction[sx][sy]
+            answer += fish[sx][sy]
+            fish[sx][sy] = -1
+            direction[sx][sy] = -1    
+        else:
+            break        
+    #그냥 바로 물고기가 있을 수도 있자나
+    else:
+        shark_index = [sx, sy]
+        shark_direction = direction[sx][sy]
+        answer += fish[sx][sy]
+        fish[sx][sy] = -1
+        direction[sx][sy] = -1      
+               
+print(answer)
 
 #상어의 방향은 물고기의 방향과 같아짐. 이후 물고기가 이동함
     
@@ -74,10 +142,7 @@ while True:
 #이동할 수 없는 칸은 상어가 있거나 공간의 경계를 넘는 경우
 # 각 물고기는 방향이 이동할 수 있는 칸을 향할 때까지 45도 반시계 회전
 # 만약 없으면 안 함
-    i, j = queue.popleft()
-    shark_direction = fish[i][j]   
-    fish[i][j] = 1e9
-    direction[i][j] = 1e9
+
 
 #물고기의 이동이 끝나면 상어가 이동함
 #상어는 방향에 있는 칸으로 이동할 수 있음
