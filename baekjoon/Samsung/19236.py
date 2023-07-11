@@ -3,49 +3,35 @@ input = lambda: sys.stdin.readline().rstrip('\r\n')
 stdout = io.BytesIO()
 sys.stdout.write = lambda s: stdout.write(s.encode("ascii"))
 atexit.register(lambda: os.write(1, stdout.getvalue()))
+import copy
 
-#번호, 방향
-# 1<= 번호 <= 16 / 겹치지 않음
-# 방향은 8가지 상하좌우, 대각선
+def fish_move(fish, direction, shark_index, shark_direction,answer):
 
-dx = [-1, -1, 0, 1, 1, 1, 0,-1]
-dy = [0, -1, -1, -1, 0, 1, 1, 1]
+    # print("Before ---- ",answer)
+    # print("fish")
+    # for i in range(4):
+    #     for j in range(4):
+    #         print(fish[i][j],end=' ')
+    #     print()    
+    # print("direction")
+    # for i in range(4):
+    #     for j in range(4):
+    #         print(direction[i][j],end=' ')
+    #     print()      
 
-fish = [ [ 0 for _ in range(4) ] for _ in range(4) ]
-direction = [ [ 0 for _ in range(4) ] for _ in range(4) ]
-
-for i in range(4):
-    temp = list(map(int, input().split()))
-    fish[i] = temp[0::2]
-    direction[i] = temp[1::2]
-
-####
-####
-####
-####
-
-#청소년 상어는 (0, 0)에 있는 물고기를 먹고, (0, 0)에 들어가게 된다. 
-# 상어의 방향은 (0, 0)에 있던 물고기의 방향과 같다. 이후 물고기가 이동한다.
-
-#i, j, direction
-answer = 0
-shark_index = [0,0]
-shark_direction = direction[0][0]
-#빈칸은 -1로 표현한다.
-answer += fish[0][0]
-fish[0][0] = -1
-direction[0][0] = -1
-
-
-def fish_move(fish, direction):
-     for number in range(1,16+1):
+    for number in range(1,17):
+        flag = False
         for x in range(4):
+            if flag == True:
+                break
             for y in range(4):
                 #물고기는 번호가 작은 물고기부터 순서대로 이동
                 fish_data = fish[x][y]
                 direction_data = direction[x][y]
-                #1번부터 차례대로 상어를 먹는다 냠냠
+                
                 if fish_data == number:
+                    flag = True
+                    
                     #direction_data 은 1부터 8까지의 값이다.
                     nx = x + dx[direction_data-1]
                     ny = y + dy[direction_data-1]
@@ -87,54 +73,122 @@ def fish_move(fish, direction):
                         direction_temp = direction[nx][ny]
                         direction[nx][ny] = direction[x][y]
                         direction[x][y] = direction_temp
+                    # print("when",number)    
+                    # print("fish")
+                    # for i in range(4):
+                    #     for j in range(4):
+                    #         print(fish[i][j],end=' ')
+                    #     print()    
+                    # print("direction")
+                    # for i in range(4):
+                    #     for j in range(4):
+                    #         print(direction[i][j],end=' ')
+                    #     print()   
+                       
+                          
                     break   
-        shark_eat()        
+                else:
+                    continue  
 
-def shark_eat():
+    # print("After ---- ")
+    # print("fish")
+    # for i in range(4):
+    #     for j in range(4):
+    #         print(fish[i][j],end=' ')
+    #     print()    
+    # print("direction")
+    # for i in range(4):
+    #     for j in range(4):
+    #         print(direction[i][j],end=' ')
+    #     print()    
+
+
+    # print("Shark eating ..." , shark_index, shark_direction)                  
+    #전달받은 상어 위치에서 ~ 상어가 이제 어디갈지 정해보쟈미
     sx = shark_index[0] + dx[shark_direction-1]
     sy = shark_index[1] + dy[shark_direction-1]
+
     #근데 새로 갈 방향이 경계를 벗어나면?
+    #그냥 끝이지
+    fish_list = []
+
     if sx < 0 or sx >=4 or sy < 0 or sy >= 4:
-        return
-
+        # print("out!!!!!!!!!!!!!!!")
+        return answer
+    if fish[sx][sy] != -1:
+        fish_list.append([sx,sy])
     #경계 안 벗어남
-    flag = True
-    if fish[sx][sy] == -1: #물고기가 없다
-        #싹다 디빈다.
-        while True: #범위 안에서 물고기가 있는 칸으로 ..
-            sx += dx[shark_direction-1]
-            sy += dy[shark_direction-1]
-            #범위를 벗어나면 안됨!
-            if sx < 0 or sx >=4 or sy < 0 or sy >= 4:
-                flag = False
-                break
-            #범위를 벗어나지 않고 물고기가 있는 칸을 찾았니?
-            if fish[sx][sy] != -1:
-                #그러면 나가자
-                break
+    #그냥 가능한 물고기들을 다 해서 Index로 넘겨줘야함 ? 그런듯
+    
 
-        if flag: #그 범위를 찾은겨
-            shark_index = [sx, sy]
-            shark_direction = direction[sx][sy]
-            answer += fish[sx][sy]
-            fish[sx][sy] = -1
-            direction[sx][sy] = -1    
+    while True: #범위 안에서 물고기가 있는 칸으로 ..
+        sx += dx[shark_direction-1]
+        sy += dy[shark_direction-1]
+        #범위를 벗어나면 안됨!
+        if sx < 0 or sx >=4 or sy < 0 or sy >= 4:
+            break
+        if fish[sx][sy] == -1:
+            continue
+        #범위를 벗어나지 않고 물고기가 있는 칸을 찾았니?
         else:
-            return        
-    #그냥 바로 물고기가 있을 수도 있자나
-    else:
-        shark_index = [sx, sy]
-        shark_direction = direction[sx][sy]
-        answer += fish[sx][sy]
-        fish[sx][sy] = -1
-        direction[sx][sy] = -1      
+            #그러면 걔네가 상어가 먹는 것이 다 가능한 애들이야.. 최고의 결과 값을 찾아야해
+            fish_list.append([sx,sy])
+            #그러면 나가자
+    # print(fish_list)        
+    temp = answer
+    for i, j in fish_list:
+        # print(i,j)
+        temp_answer = temp
+        temp_answer += fish[i][j]
+        shark_index = [i, j]
+        shark_direction =  direction[i][j]
+        # print(shark_index,shark_direction)
+        fish_copy = copy.deepcopy(fish)
+        direction_copy = copy.deepcopy(direction)
+        fish_copy[i][j] = -1
+        direction_copy[i][j] = -1   
+        # print("Shark eating finish ....," , shark_index, shark_direction,temp_answer)      
+        # print("fish")
+        # for i in range(4):
+        #     for j in range(4):
+        #         print(fish[i][j],end=' ')
+        #     print()    
+        # print("direction")
+        # for i in range(4):
+        #     for j in range(4):
+        #         print(direction[i][j],end=' ')
+        #     print()    
+        
+        # print("max?",temp)
+        answer = max(answer , fish_move(fish_copy, direction_copy, shark_index, shark_direction,temp_answer)) 
+        
+        #최고 값이라면 ~
+    return answer
 
 
-while True: 
-    #물고기의 이동      
-    fish_move()
-   
-               
-print(answer)
+#번호, 방향
+# 1<= 번호 <= 16 / 겹치지 않음
+# 방향은 8가지 상하좌우, 대각선
+
+dx = [-1, -1, 0, 1, 1, 1, 0,-1]
+dy = [0, -1, -1, -1, 0, 1, 1, 1]
+
+fish = [ [ 0 for _ in range(4) ] for _ in range(4) ]
+direction = [ [ 0 for _ in range(4) ] for _ in range(4) ]
+
+for i in range(4):
+    temp = list(map(int, input().split()))
+    fish[i] = temp[0::2]
+    direction[i] = temp[1::2]
+
+answer = 0
+shark_index = [0,0]
+shark_direction = direction[0][0]
+#빈칸은 -1로 표현한다.
+answer += fish[0][0]
+fish[0][0] = -1
+direction[0][0] = -1
+
+print(fish_move(fish, direction, shark_index, shark_direction, answer))
 
 
