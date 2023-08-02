@@ -1,85 +1,76 @@
-import sys, os, io, atexit
-input = lambda: sys.stdin.readline().rstrip('\r\n')
-stdout = io.BytesIO()
-sys.stdout.write = lambda s:stdout.write(s.encode("ascii"))
-atexit.register(lambda: os.write(1, stdout.getvalue()))
+import sys
+input = sys.stdin.readline
 
-global answer
+# 방향 왼쪽, 아래, 오른쪽, 위
+dx = [0,1,0,-1]
+dy = [-1,0,1,0]
 
-def check(i,j,value):
+# 각 방향에 따른 비율
+left = [[0,0,2,0,0],[0,10,7,1,0],[5,'a',0,0,0],[0,10,7,1,0],[0,0,2,0,0]]
+down = [[0,0,0,0,0],[0,1,0,1,0], [2,7,0,7,2], [0,10,'a',10,0], [0,0,5,0,0]]
+right = [[0,0,2,0,0],[0,1,7,10,0],[0,0,0,'a',5],[0,1,7,10,0],[0,0,2,0,0]]
+up = [[0,0,5,0,0],[0,10,'a',10,0],[2,7,0,7,2],[0,1,0,1,0],[0,0,0,0,0]]
+
+
+# d방향으로 cnt 만큼 반복하며 이동
+def move(cnt, d, rate):
     global answer
+    global x,y
+    global array
 
-    if 0<= i < N and 0 <= j < N:
-        arr[i][j] += value
-    else: 
-        answer += value
-           
+    for _ in range(cnt+1):
+        # 이동한 위치
+        x += dx[d]
+        y += dy[d]
+        a_loca = [] # a의 좌표값 저장
+        temp = 0  # 흩어진 모래의 총값
+        # x,y좌표를 rate 배열 좌표 중앙에 존재하도록 이동
+        a, b = x-2, y-2
 
-def solve(arr):
-    
-    dx = [0, 1, 0, -1]
-    dy = [-1, 0, 1 ,0] 
 
-    r = N//2
-    c = N//2
-
-    while True:
-     #copy_arr = arr[:]
-        if r == 0 and c == 0:
-            print(answer)
+        # 토네이도는 (1, 1)까지 이동한 뒤 소멸한다
+        # -> 1행1열에서 소멸한다 -> 좌표값은 (0,0)임
+        # (0, 0) 지점에 도달하는 경우 종료
+        if x < 0 or y <0:
+            # print("break")
             break
-        for i in range(4):
-            tr = r + dx[i]
-            tc = c + dy[i]
-            if 0 <= tr < N and 0<= tc < N:
-            #모레의 양
-                y = arr[tr][tc] 
 
-                if i == 1:
-                    #1%
-                    check(r-1,c,int( y * 0.01))
-                    check(r+1,c,int( y * 0.01)) 
-                    #7%
-                    check(tr-1,tc,int( y * 0.07)) 
-                    check(tr+1,tc,int( y * 0.07))
-                    #2%
-                    check(tr-2,tc,int( y * 0.02))
-                    check(tr+2,tc,int( y * 0.02))       
-                    #10%   
-                    check(tr-1,tc-1,int( y * 0.1))
-                    check(tr+1,tc-1,int( y * 0.1))  
-                    #5%
-                    check(tr,tc-2,int( y * 0.05))
-                    #a 
-                    check(tr,tc-1,int(y))         
+        # 모래 흩어지기
+        for i in range(5):
+            for j in range(5):
+                if rate[i][j] !=0 and rate[i][j] !='a':
+                    if -1< a+i <n and -1< b+j <n: # 격자 안에 존재할 경우
+                        array[a+i][b+j] += array[x][y]*rate[i][j]//100
+                    else: # 격자 밖으로 나갈 경우
+                        answer += array[x][y]*rate[i][j]//100
+                    # a값 구하기 위해 흠어진 모래양 temp에 더해주기
+                    temp += array[x][y]*rate[i][j]//100
+                elif rate[i][j] =='a': # a 좌표 기억
+                    a_loca = [i,j]
 
-                elif i == 2:
-                    #1%
-                    check(r, c-1, int( y  * 0.01))
-                    check(r, c+1, int( y  * 0.01))
-                    #7%
-                    check(tr, tc-1, int( y * 0.07))
-                    check(tr, tc+1, int( y * 0.07))
-                    #2%
-                    check(tr, tc-2, int( y * 0.02))
-                    check(tr, tc+2, int( y * 0.02))
-                    #10%
-                    check(tr-1, tc+1, int( y * 0.1))
-                    check(tr+1, tc+1, int( y * 0.1))
-                    #5%
-                    check(tr-2, tc, int( y * 0.05 ))
-                    #a
-                    check(tr-1,tc, int(y))
+        # 흩어지고 남은 모래 처리하기
+        a_x,a_y = a_loca
+        if -1< a+a_x < n and -1< b+a_y < n: # 격자 안에 존재할 경우 좌표에 더해줌
+            array[a+a_x][b+a_y] += array[x][y] -temp
+        else: # 격자 밖으로 나갈 경우 answer에 더해줌
+            answer+=array[x][y] -temp
+        array[x][y] = 0
 
-                elif i == 3:
+n = int(input())
+array = []
+for i in range(n):
+    array.append(list(map(int, input().split())))
 
-                elif i == 4:           
-            #dx dy 값 갱신 해줘야함        
+x,y = n//2, n//2 # 처음 시작 좌표
+answer = 0 # 격자 밖으로 나간 모래양
 
-answer = 0
-N = int(input())
-arr = [[0 for _ in range(N)] for _ in range(N)]
+# 달팽이 모양으로 돌기
+for i in range(n):
+    if i%2 == 0:
+        move(i, 0, left)
+        move(i, 1, down)
+    else:
+        move(i, 2, right)
+        move(i, 3, up)
 
-for i in range(N):
-    arr[i] = list(map(int, input().split()))
-
+print(answer)
