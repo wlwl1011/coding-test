@@ -11,4 +11,4 @@ if A > B:
 elif A < B:
     print('B')
 else:
-    print('same')        
+    print('same')         
