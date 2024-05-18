@@ -12,7 +12,7 @@ Max = 0
 sorted_A = sorted(A)
 
 for i in range(N):
-    if Max < sorted[i][1] - i:
-        Max = sorted[i][i] - i
+    if Max < sorted_A[i][1] - i:
+        Max = sorted_A[i][1] - i
 
 print(Max + 1)
