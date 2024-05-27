@@ -6,8 +6,8 @@ import math
 N = int(input())
 answer = []
 def isPrime(n):
-    if n == 1:
-        return False
+    if n ==1:
+        return True
     for i in range(2, int(math.sqrt(n) + 1)):
         if n % i == 0:
             return False
@@ -30,10 +30,12 @@ def dfs(n):
         
         else:
             for i in range(10):
+                if i %2 ==0 :
+                    continue
                 new_n = str(n) + str(i)
                 dfs(int(new_n))
 
-for i in range(10):
+for i in [2,3,5,7]:
     dfs(i)
 
 for i in range(len(answer)):
