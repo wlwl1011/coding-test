@@ -56,3 +56,5 @@ if truth_people:
     print(cnt)
 else:
     print(M)
+
+
